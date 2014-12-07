@@ -1,4 +1,8 @@
+from time import time
+from random import randint
+
 def bubble_sort(xs):
+    xs = list(xs)
     swapped = True
     while swapped:
         swapped = False
@@ -8,8 +12,10 @@ def bubble_sort(xs):
                 xs[i] = xs[i+1]
                 xs[i+1] = current
                 swapped = True
+    return xs
 
 def insertion_sort(xs):
+    xs = list(xs)
     for i in range(1, len(xs)):
         current = xs[i]
         j = i-1
@@ -17,6 +23,7 @@ def insertion_sort(xs):
             xs[j+1] = xs[j]
             j = j-1
         xs[j+1] = current
+    return xs
 
 def merge_sort(xs):
     if not xs:
@@ -60,27 +67,52 @@ def quicksort(xs):
                 rhs += [x]            
         return quicksort(lhs) + [pivot] + quicksort(rhs)
 
-def assertEqual(first, second):
-    if first == second:
-        print("OK")
-    else:
-        print("Fail: {} != {}".format(first, second))
 
-if __name__ == '__main__':
-    xs_unsorted = [5, 2, 4, 6, 1, 3]
-    xs_sorted = [1,2,3,4,5,6]
-    # 1. Bubble sort (in place)
-    ys = xs_unsorted.copy()
-    bubble_sort(ys)
-    assertEqual(ys, xs_sorted)
-    # 2. Insertion sort (in place)
-    ys = xs_unsorted.copy()
-    insertion_sort(ys)
-    assertEqual(ys, xs_sorted)
-    # 3. Merge sort (out of place)
-    ys = merge_sort(xs_unsorted)
-    assertEqual(ys, xs_sorted)
-    # 4. Quicksort (out of place)
-    ys = quicksort(xs_unsorted)
-    assertEqual(ys, xs_sorted)
+### Main body ###
+# generate array of random integers
+xs = [randint(0, 1e6) for i in range(10000)]
+
+# sort using different methods and measure time of 
+# execution of each algorithm
+times = []
+# 1. bubble sort
+start = time()
+bubble_sort(xs)
+stop = time()
+times += [stop - start]
+
+# 2. insertion sort
+start = time()
+insertion_sort(xs)
+stop = time()
+times += [stop - start]
+
+# 3. merge sort
+start = time()
+merge_sort(xs)
+stop = time()
+times += [stop - start]
+
+# 4. quicksort
+start = time()
+quicksort(xs)
+stop = time()
+times += [stop - start]
+
+# output sorting times to screen, and
+# plot results if matplotlib installed
+labels = ['bubble', 'insertion', 'merge', 'quicksort']
+for label, t in zip(labels, times):
+    print('%s sort: %f seconds' % (label.capitalize(), t))
+try:
+    import matplotlib.pyplot as plt
+    plt.figure()
+    x = [1,2,3,4]
+    plt.plot(x, times, 'ro')
+    plt.xticks(x, labels, rotation=35)
+    plt.ylabel('Execution time, [sec]')
+    plt.grid()
+    plt.savefig('sorting.pdf')
+except ImportError:
+    pass
 
