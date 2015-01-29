@@ -1,6 +1,10 @@
 from random import choice
 import unittest
 
+# def choice(xs):
+#     return xs[0]
+
+
 class RPSGame:
     shapes = ['rock', 'paper', 'scissors']
     draws = [('rock', 'rock'), ('paper', 'paper'), ('scissors', 'scissors')]
@@ -17,9 +21,14 @@ class RPSGame:
     def _computer_move(self):
         return choice(RPSGame.shapes)
 
+    def _verify_move(self, player_move):
+        if player_move not in RPSGame.shapes:
+            raise Exception("Wrong input!")
+        return player_move
+
     def play(self, rounds=1):
         for i in range(rounds):
-            player_move = input("[rock,paper,scissors]: ")
+            player_move = self._verify_move(input("[rock,paper,scissors]: "))
             computer_move = self._computer_move()
             winner = self._evaluate(player_move, computer_move)
             print(20 * "-")
@@ -43,5 +52,20 @@ class RPSGameTests(unittest.TestCase):
             # self.assertEquals(moves[shape] / n, 1/3)
             self.assertAlmostEqual(moves[shape] / n, 1/3, 2)
 
+    def test_verify_move(self):
+        pairs = [('rock', 'rock'), ('paper', 'paper'), ('scissors', 'scissors')]
+        for pair in pairs:
+            self.assertEqual(self.rps._verify_move(pair[0]), pair[1])
+
+        wrong_input = 'something'
+        self.assertRaises(Exception, self.rps._verify_move, wrong_input)
+
 if __name__ == '__main__':
-    unittest.main()
+    modes = ["test", "main"]
+    switch = input("[test,main]: ")
+    if switch == "test":
+        unittest.main()
+    else:
+        rps = RPSGame()
+        rps.play(rounds=3)
+
