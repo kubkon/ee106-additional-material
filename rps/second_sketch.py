@@ -21,11 +21,6 @@ def computer_move():
 # let's test our implementation of the rules
 class Tests(unittest.TestCase):
     def test_evaluate(self):
-        # not very robust way of testing!
-        self.assertEqual(evaluate('rock', 'paper'), 'Computer wins!')
-        self.assertEqual(evaluate('rock', 'scissors'), 'Player wins!')
-        self.assertEqual(evaluate('rock', 'rock'), 'Draw!')
-        
         # more robust, automated way of testing!
         # 1. test for draw
         for g in gestures:
