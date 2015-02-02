@@ -1,31 +1,31 @@
 from random import choice
 import unittest
 
-# def choice(xs):
-#     return xs[0]
-
 
 class RPSGame:
-    shapes = ['rock', 'paper', 'scissors']
-    draws = [('rock', 'rock'), ('paper', 'paper'), ('scissors', 'scissors')]
-    first_wins = [('rock', 'scissors'), ('scissors', 'paper'), ('paper', 'rock')]
+    gestures = ['rock', 'paper', 'scissors']
+    player_wins = [('rock', 'scissors'), ('scissors', 'paper'), ('paper', 'rock')]
     
+    # the rules of the game
     def _evaluate(self, player_move, computer_move):
-        if (player_move, computer_move) in RPSGame.draws:
+        if player_move == computer_move:
             return "Draw!"
-        elif (player_move, computer_move) in RPSGame.first_wins:
+        elif (player_move, computer_move) in RPSGame.player_wins:
             return "Player wins!"
         else:
             return "Computer wins!"
 
+    # computer AI
     def _computer_move(self):
-        return choice(RPSGame.shapes)
+        return choice(RPSGame.gestures)
 
+    # verify player's input
     def _verify_move(self, player_move):
-        if player_move not in RPSGame.shapes:
+        if player_move not in RPSGame.gestures:
             raise Exception("Wrong input!")
         return player_move
 
+    # play n rounds of the game against the computer
     def play(self, rounds=1):
         for i in range(rounds):
             player_move = self._verify_move(input("[rock,paper,scissors]: "))
@@ -42,15 +42,31 @@ class RPSGameTests(unittest.TestCase):
     def setUp(self):
         self.rps = RPSGame()
 
+    def test_evaluate(self):
+        # 1. test for draw
+        for g in RPSGame.gestures:
+            self.assertEqual(self.rps._evaluate(g, g), 'Draw!')
+        # 2. test for player victory
+        for g1, g2 in RPSGame.player_wins:
+            self.assertEqual(self.rps._evaluate(g1, g2), 'Player wins!')
+        # note that we don't have to test for the conditions when
+        # computer wins as there are no other possibilities
+
     def test_computer_move(self):
         moves = {'rock': 0, 'paper': 0, 'scissors': 0}
         n = 100000
         for i in range(n):
             cp = self.rps._computer_move()
             moves[cp] += 1
-        for shape in moves:
-            # self.assertEquals(moves[shape] / n, 1/3)
-            self.assertAlmostEqual(moves[shape] / n, 1/3, 2)
+        for gesture in RPSGame.gestures:
+            # 1. Due to the fact the fraction 1/3 is infinite
+            # assertEqual will never equate to true (unless n
+            # is infinite). Therefore, we need to test
+            # for almost equal.
+            # self.assertEqual(moves[gesture] / n, 1/3)
+            # 2. Test for almost equal with the precision of
+            # up to 2 decimal places.
+            self.assertAlmostEqual(moves[gesture] / n, 1/3, 2)
 
     def test_verify_move(self):
         pairs = [('rock', 'rock'), ('paper', 'paper'), ('scissors', 'scissors')]
