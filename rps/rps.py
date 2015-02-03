@@ -15,7 +15,7 @@ class RPSGame:
         else:
             return "Computer wins!"
 
-    # computer AI
+    # computer player
     def _computer_move(self):
         return choice(RPSGame.gestures)
 
