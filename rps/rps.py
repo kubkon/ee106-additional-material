@@ -4,9 +4,9 @@ from enum import Enum
 
 
 class Gesture(Enum):
-    rock = 'rock'
-    paper = 'paper'
-    scissors = 'scissors'
+    rock = 0
+    paper = 1
+    scissors = 2
 
 
 class Result(Enum):
@@ -37,7 +37,7 @@ class RPSGame:
 
     # verify player's input
     def _verify_move(self, player_move):
-        if player_move not in [g.value for g in Gesture]:
+        if player_move not in [g.name for g in Gesture]:
             raise Exception("Wrong input!")
         return Gesture[player_move]
 
@@ -85,7 +85,7 @@ class RPSGameTests(unittest.TestCase):
             self.assertAlmostEqual(moves[gesture] / n, 1/3, 2)
 
     def test_verify_move(self):
-        correct_user_input = [g.value for g in Gesture]
+        correct_user_input = [g.name for g in Gesture]
         for ip in correct_user_input:
             self.assertEqual(self.rps._verify_move(ip), Gesture[ip])
 
