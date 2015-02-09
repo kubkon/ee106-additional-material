@@ -13,7 +13,7 @@ def evaluate(player_move, computer_move):
     else:
         return 'Computer wins!'
 
-# computer AI
+# computer player
 def computer_move():
     random_draw = choice(gestures)
     return random_draw
