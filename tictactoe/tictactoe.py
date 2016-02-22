@@ -42,6 +42,17 @@ class TicTacToe:
                 
         return done
 
+    def render(self):
+        rendered = ''
+        for i in range(3):
+            for j in range(3):
+                if self.grid[i][j] == '':
+                    rendered += '_ '
+                else:
+                    rendered += self.grid[i][j] + ' '
+            rendered += '\n'
+        return rendered
+
 
 class TicTacToeTests(unittest.TestCase):
     def test_grid(self):
@@ -134,6 +145,22 @@ class TicTacToeTests(unittest.TestCase):
         ttt.grid[1][1] = 'x'
         ttt.grid[0][2] = 'x'
         self.assertEqual(True, ttt.check_if_done())
+
+    def test_render(self):
+        ttt = TicTacToe()
+        self.assertEqual('_ _ _ \n_ _ _ \n_ _ _ \n', ttt.render())
+
+        ttt.grid[0][0] = 'x'
+        self.assertEqual('x _ _ \n_ _ _ \n_ _ _ \n', ttt.render())
+
+        ttt.grid[2][2] = 'o'
+        self.assertEqual('x _ _ \n_ _ _ \n_ _ o \n', ttt.render())
+
+        ttt.grid[0][2] = 'x'
+        self.assertEqual('x _ x \n_ _ _ \n_ _ o \n', ttt.render())
+
+        ttt.grid[0][1] = 'o'
+        self.assertEqual('x o x \n_ _ _ \n_ _ o \n', ttt.render())
 
 
 if __name__ == '__main__':
