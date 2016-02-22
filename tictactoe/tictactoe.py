@@ -1,4 +1,5 @@
 import unittest
+import random
 
 
 class TicTacToe:
@@ -52,6 +53,33 @@ class TicTacToe:
                     rendered += self.grid[i][j] + ' '
             rendered += '\n'
         return rendered
+
+    def comp_move(self):
+        unoccupied = []
+        for i in range(3):
+            for j in range(3):
+                if self.grid[i][j] == '':
+                    unoccupied += [(i,j)]
+
+        # randomise computer move
+        choice = random.choice(unoccupied)
+        self.grid[choice[0]][choice[1]] = 'o'
+
+    def run(self):
+        # 1. render to screen
+        # 2. ask user for input: x and y coordinates
+        # 3. apply to the grid
+        # 4. computer move
+        # 5. check if we are done
+        # 6. repeat until winner or no more moves
+        while True:
+            print(self.render())
+            x_y_str = input('Specify coordinates as (x,y): ')
+            (x, y) = list(map(int, x_y_str.split(',')))
+            self.grid[x][y] = 'x'
+            if self.check_if_done():
+                break
+            self.comp_move()
 
 
 class TicTacToeTests(unittest.TestCase):
@@ -161,6 +189,7 @@ class TicTacToeTests(unittest.TestCase):
 
         ttt.grid[0][1] = 'o'
         self.assertEqual('x o x \n_ _ _ \n_ _ o \n', ttt.render())
+        
 
 
 if __name__ == '__main__':
